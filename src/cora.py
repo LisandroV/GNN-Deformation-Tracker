@@ -29,7 +29,7 @@ class CustomGNN(torch.nn.Module):
         return F.log_softmax(x, dim=1)
 
 # Initialize the GNN model
-input_features = dataset.num_node_features # 14433
+input_features = dataset.num_node_features # 1433
 num_classes = dataset.num_classes # 7
 model = CustomGNN(input_features, 16, num_classes)
 
