@@ -8,8 +8,10 @@ class PropagationGNN(nn.Module):
         # Adjust GCNConv to account for node and edge features
         self.conv1 = pyg_nn.GCNConv(node_dim, hidden_dim)
         self.conv2 = pyg_nn.GCNConv(hidden_dim, hidden_dim)
+
         # Linear layer to combine edge features after message passing
         self.edge_fc = nn.Linear(edge_dim, hidden_dim)
+
         self.fc = nn.Linear(hidden_dim, output_dim)
 
     def forward(self, x, edge_index, edge_attr):
@@ -17,7 +19,7 @@ class PropagationGNN(nn.Module):
         x = self.conv1(x, edge_index).relu()
 
         # Combine node features with transformed edge features
-        edge_features = self.edge_fc(edge_attr).relu()
+        edge_features = self.edge_fc(edge_attr).relu() # FIXME: meter x, como en la definición
 
         # Message passing considering updated edge features
         x = self.conv2(x, edge_index).relu()
@@ -79,7 +81,7 @@ true_next_states = torch.tensor([
 
 
 #TRAIN THE MODEL
-model = PropagationGNN(node_dim=4, hidden_dim=64, output_dim=4)
+model = PropagationGNN(node_dim=4, edge_dim=1, hidden_dim=64, output_dim=4)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 loss_fn = nn.MSELoss()
 
