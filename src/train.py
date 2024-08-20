@@ -19,7 +19,7 @@ edge_index = torch.tensor([
 ], dtype=torch.long)
 
 # Example edge attributes (e.g., force magnitude between nodes)
-edge_attr = torch.tensor([[0.7], [0.3]], dtype=torch.float)
+edge_attr = torch.tensor([[0.7, 0.5], [0.3, 0.3]], dtype=torch.float)
 
 # Create a PyTorch Geometric Data object
 data = Data(x=node_features, edge_index=edge_index, edge_attr=edge_attr)
@@ -34,7 +34,7 @@ true_next_states = torch.tensor([
 
 
 #TRAIN THE MODEL
-model = PropagationGNN(in_dim_node=4, in_dim_edge=1, out_dim=4)
+model = PropagationGNN(in_dim_node=4, in_dim_edge=2, out_dim=4)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 loss_fn = nn.MSELoss()
 
