@@ -34,12 +34,12 @@ def create_graph(level_set, finger_data, time_step):
     closest_index = 11 # validation
     closest_index = get_closest_point(finger_data[time_step], level_set[time_step])
 
-    edge_index = torch.tensor([forward+backward + [47], backward+forward+[closest_index]], dtype=torch.long) # double connected graph
+    edge_index = torch.tensor([forward+backward + [closest_index, 47] , backward+forward+[47 ,closest_index]], dtype=torch.long) # double connected graph
 
     finger_node = np.append(finger[time_step,:2], finger[time_step,4:]) # not consider finger force
     x = torch.tensor(np.append(polygon, [finger_node], axis=0), dtype=torch.float) # add finger position to the graph
 
-    zero_force = np.array([[0,0]] * 94) # force on all nodes is zero
+    zero_force = np.array([[0,0]] * 95) # force on all nodes is zero
     edge_attr = np.append(zero_force, [finger[time_step,2:4]], axis=0) # only consider the force from the finger
     edge_attr = torch.tensor(edge_attr, dtype=torch.float)
 
@@ -86,3 +86,14 @@ for epoch in range(epochs):
     # Print loss every 100 epochs
     if epoch % 100 == 0:
         print(f'Epoch {epoch}, Loss: {loss.item()}')
+
+# PREDICT FUTURE STATES
+model.eval()  # Set the model to evaluation mode
+
+# Predict the next state
+with torch.no_grad():
+    predicted_next_state = model(graph)
+
+print("Predicted Future State:")
+print(predicted_next_state)
+print(predicted_next_state.size())
