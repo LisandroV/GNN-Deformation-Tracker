@@ -87,7 +87,8 @@ class PropagationGNN(Module):
 
     def forward(self, graph):
         out = self.node_encoder(graph.x)
-        edge_attr = self.edge_encoder(graph.edge_attr)
+        edge_attr = self.edge_encoder(graph.edge_attr) # FIXME: Here
+        #import ipdb;ipdb.set_trace();
         out, _ = self.graph_processor(out, graph.edge_index, edge_attr)
         out = self.node_decoder(
             out

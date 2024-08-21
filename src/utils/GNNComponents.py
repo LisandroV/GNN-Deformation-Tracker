@@ -1,4 +1,4 @@
-from torch import nn, cat
+from torch import nn, cat, scatter_add
 from torch_geometric.nn import MetaLayer
 from torch_scatter import scatter_sum
 
@@ -94,6 +94,7 @@ class EdgeProcessor(nn.Module):
         )
 
     def forward(self, src, dest, edge_attr, u=None, batch=None):
+        # import ipdb;ipdb.set_trace(); #FIXME:
         out = cat(
             [src, dest, edge_attr], -1
         )  # concatenate source node, destination node, and edge embeddings
@@ -131,6 +132,7 @@ class NodeProcessor(nn.Module):
     def forward(self, x, edge_index, edge_attr, u=None, batch=None):
         row, col = edge_index
         out = scatter_sum(edge_attr, col, dim=0)  # aggregate edge message by target
+        #import ipdb;ipdb.set_trace(); # FIXME:
         out = cat([x, out], dim=-1)
         out = self.node_mlp(out)
         # out += x #residual connection
