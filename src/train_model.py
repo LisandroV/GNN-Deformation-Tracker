@@ -4,7 +4,7 @@ from torch_geometric.data import Data
 import numpy as np
 from data.velocity.validation import level_set, finger_data
 from utils.ploting import plot_graph
-from PropagationGNN import PropagationGNN
+from utils.PropagationGNN import PropagationGNN
 
 def get_closest_point(finger, velocity_polygon):
     """Returns the index of the closest node to the finger position."""
@@ -19,6 +19,13 @@ def get_closest_point(finger, velocity_polygon):
             min_node_index=i
 
     return min_node_index
+
+
+def get_expected_polygon(level_set, finger_data, time_step):
+    """Returns only the node positions at a given time_step"""
+    expected_polygon = np.append(level_set[time_step][:,:2], [finger_data[time_step][:2]], axis=0)
+
+    return torch.tensor(expected_polygon, dtype=torch.float)
 
 
 def create_graph(level_set, finger_data, time_step):
@@ -43,23 +50,14 @@ def create_graph(level_set, finger_data, time_step):
     edge_attr = np.append(zero_force, [finger[time_step,2:4]], axis=0) # only consider the force from the finger
     edge_attr = torch.tensor(edge_attr, dtype=torch.float)
 
-    graph = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
+    expected = get_expected_polygon(level_set, finger_data, time_step+1)
+
+    graph = Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=expected)
 
     return graph
 
-def get_expected_polygon(level_set, finger_data, time_step):
-    """Returns only the node positions at a given time_step"""
-    expected_polygon = np.append(level_set[time_step][:,:2], [finger_data[time_step][:2]], axis=0)
-    return expected_polygon
-
-
 
 graph = create_graph(level_set, finger_data, 25)
-
-
-expected = get_expected_polygon(level_set, finger_data, 30)
-expected_tensor = torch.tensor(expected, dtype=torch.float)
-
 
 
 # TRAIN ------------------------------------------------------------------------------------------------------------------------------
@@ -77,7 +75,7 @@ for epoch in range(epochs):
     pred = model(graph)
 
     # Compute loss
-    loss = loss_fn(pred, expected_tensor)
+    loss = loss_fn(pred, graph.y)
 
     # Backward pass and optimization
     loss.backward()
