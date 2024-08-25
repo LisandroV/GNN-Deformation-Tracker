@@ -3,8 +3,9 @@ import torch.nn as nn
 import numpy as np
 from utils.ploting import plot_graph, plot_predicted_poligon
 from data.DataLoader import create_data_loader, get_graphs
-from data.velocity.train1 import finger_data
+from data.velocity.train2 import finger_data
 from torch_geometric.data import Data
+from plot_data import plot_data
 
 TIME_STEPS = 100
 
@@ -14,10 +15,11 @@ model.eval()  # Set the model to evaluation mode
 
 graphs = get_graphs()
 
-# Predict the next state
+predicted_level_set = []
 
 with torch.no_grad():
     predicted_polygon = model(graphs[0])
+    predicted_level_set.append(predicted_polygon[:-1, :2])
 
 
 velocities = predicted_polygon - graphs[0].x[:,:2]
@@ -37,8 +39,13 @@ for time_step in range (1, TIME_STEPS-1):
 
     with torch.no_grad():
         predicted_polygon = model(new_graph)
+        predicted_level_set.append(predicted_polygon[:-1, :2])
 
     velocities = predicted_polygon - x[:,:2]
     new_polygon = np.append(predicted_polygon, velocities, axis=1)[:47] # current polygon with velocity, and not predicted finger data
 
-    print(new_polygon)
+
+# PLOT PREDICTION ------------------------------------------
+predicted_level_set = np.array(predicted_level_set)
+plot_data(predicted_level_set, finger_data)
+

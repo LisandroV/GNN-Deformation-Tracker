@@ -14,7 +14,7 @@ graphs = get_graphs()
 
 
 # Training loop
-epochs = 100
+epochs = 1000
 for epoch in range(epochs):
     print(f"training epoch [{epoch}]")
     for batch_graph in data_loader:

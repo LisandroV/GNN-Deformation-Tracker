@@ -2,7 +2,7 @@ import torch
 from torch_geometric.data import Data, InMemoryDataset
 from torch_geometric.loader import DataLoader
 import numpy as np
-from data.velocity.validation import level_set, finger_data
+from data.velocity.train2 import level_set, finger_data
 
 TIME_STEPS = 100
 
