@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from utils.ploting import plot_graph
+from utils.ploting import plot_graph, plot_predicted_poligon
 from utils.PropagationGNN import PropagationGNN
 from data.DataLoader import create_data_loader, get_graphs
 
@@ -16,7 +16,7 @@ graphs = get_graphs()
 # Training loop
 epochs = 100
 for epoch in range(epochs):
-    print("Aaaaaaa")
+    print(f"training epoch [{epoch}]")
     for batch_graph in data_loader:
         model.train()
         optimizer.zero_grad()
@@ -35,13 +35,4 @@ for epoch in range(epochs):
             print(f'Epoch {epoch}, Loss: {loss.item()}')
 
 
-# PREDICT FUTURE STATES
-model.eval()  # Set the model to evaluation mode
-
-# Predict the next state
-with torch.no_grad():
-    predicted_next_state = model(graphs[40])
-
-print("Predicted Future State:")
-print(predicted_next_state)
-print(predicted_next_state.size())
+torch.save(model, "src/trained_gnn_model.pth")
