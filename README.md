@@ -1,4 +1,4 @@
-# Purpose: Predict object deformation with a GNN model
+# Purpose: Predict object deformation with a Graph Neural Network model
 In this repo contains a Graph Neural Network to predict the deformation on objects by replicating the solution proposed in the scientific paper `Combining Self-Organizing and Graph Neural Networks for Modeling Deformable Objects in Robotic` by Valencia AJ and Payeur P (2020).
 
 # Object deformation
