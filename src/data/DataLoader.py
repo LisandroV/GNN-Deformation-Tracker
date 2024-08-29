@@ -2,7 +2,6 @@ import torch
 from torch_geometric.data import Data, InMemoryDataset
 from torch_geometric.loader import DataLoader
 import numpy as np
-from data.velocity.train2 import level_set, finger_data
 
 TIME_STEPS = 100
 
@@ -56,39 +55,37 @@ def _create_graph(level_set, finger_data, time_step):
 
     return graph
 
-def get_graphs():
+
+def get_graphs(dataset):
     graphs = []
     for time_step in range(TIME_STEPS-1): # the last graph doesn't have an expected value
-        graph = _create_graph(level_set, finger_data, time_step)
+        graph = _create_graph(dataset.level_set, dataset.finger_data, time_step)
         graphs.append(graph)
 
     return graphs
 
+def get_expected_level_set(dataset):
+    return dataset.level_set[1:, :, :2]
 
-def _create_dataset():
-    # Create a custom dataset
-    class MyGraphDataset(InMemoryDataset):
-        def __init__(self, graphs):
-            super(MyGraphDataset, self).__init__()
-            self.data_list = graphs
+def create_data_loader(datasets, batch_size=4):
+    """
+    Factory for Torch Data Loader.
 
-        def len(self):
-            return len(self.data_list)
+    Input:
+        dataset: list of datasets
+            [{
+                level_set: np.array() of shape(100,47,2),
+                finger_data: np.array() of shape(100,2),
+            }]
 
-        def get(self, idx):
-            return self.data_list[idx]
+        batch_size: Data loader batch size.
+    """
+    all_graphs = []
+    for dataset in datasets:
+        graphs = get_graphs(dataset)
+        all_graphs += graphs
 
-    graphs = get_graphs()
-    dataset = MyGraphDataset(graphs)
-
-    return dataset
-
-def create_data_loader(batch_size):
-    "factory for Data Loader"
-    graphs = get_graphs()
-    dataset = _create_dataset()
     loader = DataLoader(graphs, batch_size=batch_size, shuffle=True)
-    # loader.data = dataset
 
     return loader
 

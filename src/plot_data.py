@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.cm as cm
 
-import data.train2_data as data
+import data.velocity.validation as data
 
 def plot_data(level_set, finger_positions):
     #poligon_indexes.append(poligon_indexes[0])
@@ -34,7 +34,10 @@ def plot_data(level_set, finger_positions):
         ax.plot(t, polygon[:, 0], polygon[:, 1], color=colorVal, alpha=0.5)
 
     # Plot finger position
-    ax.plot(np.array(values), finger_positions[1:, 0], finger_positions[1:, 1], color='blue', alpha=0.5)
+    try:
+        ax.plot(np.array(values), finger_positions[1:, 0], finger_positions[1:, 1], color='blue', alpha=0.5)
+    except:
+        ax.plot(np.array(values), finger_positions[:, 0], finger_positions[:, 1], color='blue', alpha=0.5)
 
     ax.set_xlabel("time")
     ax.set_ylabel("x")
