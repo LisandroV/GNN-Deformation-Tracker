@@ -1,3 +1,10 @@
+# Purpose: Predict object deformation with a GNN model
+In this repo contains a Graph Neural Network to predict the deformation on objects by replicating the solution proposed in the scientific paper `Combining Self-Organizing and Graph Neural Networks for Modeling Deformable Objects in Robotic` by Valencia AJ and Payeur P (2020).
+
+# Object deformation
+The deformation of objects over time is represented with a level set:
+![](deformation.png)
+
 # Graph Neural Network to predict the deformation of elastic objects
 
  Using Graph Neural Network (GNN) as a data-driven approach to predict the deformation of an object. Instead of relying on physical material properties, the model can learn to predict the deformation directly from data, using the observed relationships between applied forces and resulting displacements.
@@ -103,6 +110,5 @@ pyenv-virtualenv
     pip install -r requirements.txt
     ```
 
-## Train model
-
-## Make deformation predictions
+## References
+The GNN code comes from https://github.com/CCSI-Toolset/MGN
