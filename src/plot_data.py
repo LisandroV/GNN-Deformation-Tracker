@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.cm as cm
 
-import data.velocity.validation as data
+import data.velocity.train1 as data
 
 def plot_data(level_set, finger_positions):
     #poligon_indexes.append(poligon_indexes[0])
