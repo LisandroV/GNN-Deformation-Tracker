@@ -1,5 +1,5 @@
 import numpy as np
-import data.validation_data as Data
+import data.test_data as Data
 
 level_set = np.array(Data.level_set) # shape: (100, 47, 2)
 finger = np.array(Data.finger_data) # shape: (100, 4)

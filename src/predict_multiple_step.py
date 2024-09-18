@@ -5,6 +5,7 @@ from utils.ploting import plot_graph, plot_predicted_poligon
 from data.DataLoader import get_graphs, get_expected_level_set
 import data.velocity.train1 as train1_data
 import data.velocity.validation as validation_data
+import data.velocity.test as test_data
 from torch_geometric.data import Data
 from plot_data import plot_data
 
@@ -66,10 +67,16 @@ def get_overall_loss(dataset, prediction):
 predicted_level_set = predict(train1_data)
 plot_data(predicted_level_set, train1_data.finger_data)
 loss = get_overall_loss(train1_data, predicted_level_set)
-print(loss)
+print("Train1 Loss: "+ str(loss))
 
 
 predicted_level_set = predict(validation_data)
 plot_data(predicted_level_set, validation_data.finger_data)
 loss = get_overall_loss(validation_data, predicted_level_set)
-print(loss)
+print("Validation Loss: "+ str(loss))
+
+
+predicted_level_set = predict(test_data)
+plot_data(predicted_level_set, test_data.finger_data)
+loss = get_overall_loss(test_data, predicted_level_set)
+print("Test Loss: "+ str(loss))
